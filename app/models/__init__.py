@@ -1,0 +1,87 @@
+"""Import all models so SQLAlchemy mappers and Alembic see the full metadata."""
+
+from app.db.base import Base
+from app.models.auth import AuditLog, RefreshToken, Role, User, UserRole
+from app.models.content import Announcement, Sponsor, UploadedFile
+from app.models.core import (
+    CompetitionStage,
+    Department,
+    Group,
+    GroupMember,
+    Participant,
+    Sport,
+    SportRule,
+    Team,
+    TeamMember,
+    Tournament,
+    Venue,
+)
+from app.models.fixtures import (
+    Fixture,
+    FixtureParticipant,
+    LiveMatchState,
+    MatchEvent,
+    MatchPeriod,
+    RaceEntry,
+    RaceHeat,
+    RaceResult,
+    SetScore,
+)
+from app.models.notifications import (
+    NotificationDelivery,
+    NotificationEvent,
+    NotificationPreference,
+    NotificationTemplate,
+    PushSubscription,
+)
+from app.models.standings import (
+    Bracket,
+    BracketNode,
+    DepartmentPoints,
+    Medal,
+    Standing,
+    StandingRow,
+)
+
+__all__ = [
+    "Base",
+    "AuditLog",
+    "RefreshToken",
+    "Role",
+    "User",
+    "UserRole",
+    "Announcement",
+    "Sponsor",
+    "UploadedFile",
+    "CompetitionStage",
+    "Department",
+    "Group",
+    "GroupMember",
+    "Participant",
+    "Sport",
+    "SportRule",
+    "Team",
+    "TeamMember",
+    "Tournament",
+    "Venue",
+    "Fixture",
+    "FixtureParticipant",
+    "LiveMatchState",
+    "MatchEvent",
+    "MatchPeriod",
+    "RaceEntry",
+    "RaceHeat",
+    "RaceResult",
+    "SetScore",
+    "NotificationDelivery",
+    "NotificationEvent",
+    "NotificationPreference",
+    "NotificationTemplate",
+    "PushSubscription",
+    "Bracket",
+    "BracketNode",
+    "DepartmentPoints",
+    "Medal",
+    "Standing",
+    "StandingRow",
+]

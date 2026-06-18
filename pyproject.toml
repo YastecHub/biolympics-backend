@@ -1,0 +1,68 @@
+[project]
+name = "biolympics-backend"
+version = "0.1.0"
+description = "BIOLYMPICS LIVE — FastAPI backend for the Life Sciences Dean's Games live-score platform"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.5",
+    "email-validator>=2.2",
+    "sqlalchemy[asyncio]>=2.0.35",
+    "asyncpg>=0.30",
+    "aiosqlite>=0.20",
+    "alembic>=1.13",
+    "redis>=5.1",
+    "celery>=5.4",
+    "argon2-cffi>=23.1",
+    "pyjwt>=2.9",
+    "python-multipart>=0.0.12",
+    "structlog>=24.4",
+    "pywebpush>=2.0",
+    "py-vapid>=1.9",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.7",
+    "mypy>=1.11",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["alembic/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "C4", "SIM"]
+ignore = [
+    "B008",   # FastAPI uses function calls (Depends) in argument defaults
+    "UP042",  # keep the explicit (str, Enum) base — clearer + SQLAlchemy-friendly
+    "UP046",  # keep Generic[T] base over PEP 695 syntax for Pydantic compatibility
+]
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
+warn_unused_ignores = true
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+omit = ["alembic/*", "tests/*"]
