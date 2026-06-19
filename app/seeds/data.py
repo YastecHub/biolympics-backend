@@ -26,16 +26,51 @@ TOURNAMENT = {
     "medal_points": {"gold": 5, "silver": 3, "bronze": 1},
 }
 
-# (name, abbreviation, short_name, primary, secondary)
+# (name, abbreviation, short_name, primary, secondary, logo_url)
 DEPARTMENTS = [
-    ("Botany", "BTN", "Botany", "#2e7d32", "#1b5e20"),
-    ("Cell Biology and Genetics", "CBG", "Cell Bio", "#6a1b9a", "#4a148c"),
-    ("Marine Sciences", "MSM", "Marine", "#0277bd", "#01579b"),
-    ("Microbiology", "MIC", "Micro", "#c62828", "#8e0000"),
-    ("Zoology", "ZLY", "Zoology", "#ef6c00", "#e65100"),
-    ("Biochemistry", "BCH", "Biochem", "#00838f", "#006064"),
-    ("Pre-Med", "PRE-MED", "Pre-Med", "#283593", "#1a237e"),
-    ("Fisheries", "FISHERIES", "Fisheries", "#558b2f", "#33691e"),
+    ("Botany", "BTN", "Botany", "#2e7d32", "#1b5e20", "/assets/departments/botany.png"),
+    (
+        "Cell Biology and Genetics",
+        "CBG",
+        "Cell Bio",
+        "#6a1b9a",
+        "#4a148c",
+        "/assets/departments/cell-biology-and-genetics.png",
+    ),
+    (
+        "Marine Sciences",
+        "MSM",
+        "Marine",
+        "#0277bd",
+        "#01579b",
+        "/assets/departments/marine-sciences.png",
+    ),
+    (
+        "Microbiology",
+        "MIC",
+        "Micro",
+        "#c62828",
+        "#8e0000",
+        "/assets/departments/microbiology.png",
+    ),
+    ("Zoology", "ZLY", "Zoology", "#ef6c00", "#e65100", "/assets/departments/zoology.png"),
+    (
+        "Biochemistry",
+        "BCH",
+        "Biochem",
+        "#00838f",
+        "#006064",
+        "/assets/departments/biochemistry.png",
+    ),
+    ("Pre-Med", "PRE-MED", "Pre-Med", "#283593", "#1a237e", "/assets/departments/pre-med.png"),
+    (
+        "Fisheries",
+        "FISHERIES",
+        "Fisheries",
+        "#558b2f",
+        "#33691e",
+        "/assets/departments/fisheries.png",
+    ),
 ]
 
 # (name, slug, icon, gender, format, scoring, participant, requires_table,

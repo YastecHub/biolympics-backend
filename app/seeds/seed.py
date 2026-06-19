@@ -115,13 +115,14 @@ async def seed(db: AsyncSession, with_demo: bool = True) -> dict:
 
     # Departments
     depts: dict[str, Department] = {}
-    for name, abbr, short, primary, secondary in data.DEPARTMENTS:
+    for name, abbr, short, primary, secondary, logo_url in data.DEPARTMENTS:
         d = Department(
             tournament_id=t.id,
             name=name,
             abbreviation=abbr,
             short_name=short,
             slug=abbr.lower().replace(" ", "-"),
+            logo_url=logo_url,
             primary_color=primary,
             secondary_color=secondary,
             is_active=True,
