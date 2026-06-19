@@ -310,9 +310,9 @@ MALE_FOOTBALL_SCHEDULE = {
 # (sport_slug, label/round_name, date or None, start hour, start min, end hour,
 #  end min, venue or None)
 SCHEDULE_EVENTS = [
-    ("female-football", "Knockout", "2026-06-19", 8, 0, 10, 0, None),
     ("indoor-games", "Group Play", "2026-06-19", 16, 0, 19, 0, "Indoor Hall"),
     ("marathon", "Marathon (M & F)", "2026-06-20", 6, 30, 10, 0, None),
+    ("female-football", "Knockout", "2026-06-20", 8, 0, 10, 0, None),
     ("volleyball", "Knockout", "2026-06-22", 12, 0, 14, 0, None),
     ("basketball", "Knockout", "2026-06-22", 12, 0, 14, 0, "Sports Centre"),
     ("female-football", "Semi-Finals", "2026-06-23", 12, 0, 14, 0, None),
