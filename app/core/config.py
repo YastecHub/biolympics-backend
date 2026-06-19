@@ -49,12 +49,11 @@ class Settings(BaseSettings):
     vapid_private_key: str = Field("", alias="VAPID_PRIVATE_KEY")
     vapid_subject: str = Field("mailto:admin@biolympics.example", alias="VAPID_SUBJECT")
 
-    # --- Object storage ---
-    s3_endpoint_url: str = Field("http://localhost:9000", alias="S3_ENDPOINT_URL")
-    s3_access_key: str = Field("biolympics", alias="S3_ACCESS_KEY")
-    s3_secret_key: str = Field("biolympics-secret", alias="S3_SECRET_KEY")
-    s3_bucket: str = Field("biolympics-media", alias="S3_BUCKET")
-    s3_region: str = Field("us-east-1", alias="S3_REGION")
+    # --- Media storage (Cloudinary) ---
+    cloudinary_cloud_name: str = Field("", alias="CLOUDINARY_CLOUD_NAME")
+    cloudinary_api_key: str = Field("", alias="CLOUDINARY_API_KEY")
+    cloudinary_api_secret: str = Field("", alias="CLOUDINARY_API_SECRET")
+    cloudinary_upload_folder: str = Field("biolympics", alias="CLOUDINARY_UPLOAD_FOLDER")
 
     # --- Initial admin (dev only) ---
     initial_admin_email: str = Field("admin@biolympics.ng", alias="INITIAL_ADMIN_EMAIL")

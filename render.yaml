@@ -1,0 +1,118 @@
+# =============================================================================
+# BIOLYMPICS LIVE — backend on Render (Blueprint)
+#
+# Deploy:  Render Dashboard -> New + -> Blueprint -> connect this repo
+#          (YastecHub/biolympics-backend). Render reads this file, creates the
+#          services below, and prompts for every env var marked `sync: false`.
+#
+# Data stores (external, NOT created by Render):
+#   - Postgres : Supabase. Use the **Session pooler** connection string
+#                (host aws-0-<region>.pooler.supabase.com, port 5432,
+#                user postgres.<project-ref>). The transaction pooler (6543)
+#                breaks asyncpg prepared statements — do not use it here.
+#   - Redis    : your managed Redis. Use `rediss://` if it requires TLS.
+#
+# The app already forces TLS for remote Postgres (app/db/session.py), so the
+# DATABASE_URL needs no ?sslmode= — just strip any extra query params.
+# =============================================================================
+
+envVarGroups:
+  - name: biolympics-backend
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_NAME
+        value: BIOLYMPICS LIVE
+      - key: TZ
+        value: Africa/Lagos
+      - key: LOG_LEVEL
+        value: INFO
+
+      # ---- Set these in the dashboard when the Blueprint prompts ----
+      # postgresql+asyncpg://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres
+      - key: DATABASE_URL
+        sync: false
+      # Event bus (WebSocket fan-out). e.g. redis://... or rediss://...
+      - key: REDIS_URL
+        sync: false
+      # Celery broker/result. Same Redis is fine. If your Redis is single-db
+      # (Upstash / Render Key Value) reuse the same URL; if it supports multiple
+      # DBs you may append /1 and /2. For rediss:// add ?ssl_cert_reqs=required.
+      - key: CELERY_BROKER_URL
+        sync: false
+      - key: CELERY_RESULT_BACKEND
+        sync: false
+
+      # https://<your-frontend>.vercel.app  (comma-separate to allow several)
+      - key: CORS_ORIGINS
+        sync: false
+      # Host header allow-list. Must include the Render host or every request 400s.
+      # e.g. biolympics-backend.onrender.com  (add your custom domain later)
+      - key: TRUSTED_HOSTS
+        sync: false
+      # https://<your-frontend>.vercel.app
+      - key: APP_URL
+        sync: false
+      # https://biolympics-backend.onrender.com
+      - key: API_BASE_URL
+        sync: false
+
+      # python -c "import secrets; print(secrets.token_urlsafe(48))"
+      - key: SECRET_KEY
+        sync: false
+      - key: INITIAL_ADMIN_EMAIL
+        sync: false
+      - key: INITIAL_ADMIN_PASSWORD
+        sync: false
+
+      # ---- Web push (optional; only needed once you enable notifications) ----
+      # Generate with: python -m app.cli generate-vapid
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
+      - key: VAPID_SUBJECT
+        value: mailto:admin@biolympics.ng
+
+      # ---- Media storage (Cloudinary): videos, images, sponsor logos ----
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_UPLOAD_FOLDER
+        value: biolympics
+
+services:
+  # ---- FastAPI: REST + WebSockets + in-process Redis subscriber ----
+  - type: web
+    name: biolympics-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter            # starter = no spin-down, so WebSockets + the Redis
+                             # subscriber stay alive 24/7. `free` works for tests
+                             # but sleeps after 15 min idle and skips preDeploy.
+    region: frankfurt        # pick the region closest to your Supabase project.
+    healthCheckPath: /health
+    # Bind Render's injected $PORT (overrides the Dockerfile CMD's fixed 8000).
+    dockerCommand: sh -c "uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers"
+    # Apply migrations before the new version takes traffic.
+    preDeployCommand: alembic upgrade head
+    envVars:
+      - fromGroup: biolympics-backend
+
+  # ---- Celery worker + embedded beat: push reminders / dispatch / pruning ----
+  #  Only needed for web-push notifications. Delete this whole service if you are
+  #  not using push yet (live scores work without it). Requires a paid instance.
+  - type: worker
+    name: biolympics-worker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter
+    region: frankfurt
+    dockerCommand: celery -A app.workers.celery_app worker --beat --loglevel=info
+    envVars:
+      - fromGroup: biolympics-backend
