@@ -40,9 +40,9 @@ class Tournament(UUIDMixin, TimestampMixin, Base):
     end_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     is_current: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
-    # Editable medal-table scoring formula, e.g. {"gold":5,"silver":3,"bronze":1}
+    # Editable medal-table scoring formula, e.g. {"gold":5,"silver":2,"bronze":1}
     medal_points: Mapped[dict] = mapped_column(
-        JSON, default=lambda: {"gold": 5, "silver": 3, "bronze": 1}
+        JSON, default=lambda: {"gold": 5, "silver": 2, "bronze": 1}
     )
 
 

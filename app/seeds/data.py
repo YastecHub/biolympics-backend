@@ -23,7 +23,7 @@ TOURNAMENT = {
     "end_date": "2026-06-27",
     "description": "The Faculty of Life Sciences Dean's Games — eight departments, "
     "many sports, one champion.",
-    "medal_points": {"gold": 5, "silver": 3, "bronze": 1},
+    "medal_points": {"gold": 5, "silver": 2, "bronze": 1},
 }
 
 # (name, abbreviation, short_name, primary, secondary, logo_url)
@@ -65,7 +65,7 @@ DEPARTMENTS = [
     ("Pre-Med", "PRE-MED", "Pre-Med", "#283593", "#1a237e", "/assets/departments/pre-med.png"),
     (
         "Fisheries",
-        "FISHERIES",
+        "FSH",
         "Fisheries",
         "#558b2f",
         "#33691e",
@@ -300,23 +300,23 @@ VENUES = [
 DRAWS = {
     "male-football": {
         "Group A": ["BTN", "CBG", "MSM", "MIC"],
-        "Group B": ["ZLY", "BCH", "PRE-MED", "FISHERIES"],
+        "Group B": ["ZLY", "BCH", "PRE-MED", "FSH"],
     },
     "female-football": {
-        "Pot A": ["MSM", "ZLY", "FISHERIES", "BCH"],
+        "Pot A": ["MSM", "ZLY", "FSH", "BCH"],
         "Pot B": ["MIC", "BTN", "PRE-MED", "CBG"],
     },
     "basketball": {
         "Pot A": ["MSM", "BCH", "CBG", "ZLY"],
-        "Pot B": ["MIC", "BTN", "PRE-MED", "FISHERIES"],
+        "Pot B": ["MIC", "BTN", "PRE-MED", "FSH"],
     },
     "volleyball": {
-        "Pot A": ["BCH", "CBG", "BTN", "FISHERIES"],
+        "Pot A": ["BCH", "CBG", "BTN", "FSH"],
         "Pot B": ["PRE-MED", "MIC", "MSM", "ZLY"],
     },
     "indoor-games": {
         "Pot A": ["BCH", "PRE-MED", "CBG", "MSM"],
-        "Pot B": ["BTN", "MIC", "ZLY", "FISHERIES"],
+        "Pot B": ["BTN", "MIC", "ZLY", "FSH"],
     },
 }
 
@@ -328,9 +328,9 @@ MALE_FOOTBALL_FIXTURES = {
         3: [("BTN", "MIC"), ("CBG", "MSM")],
     },
     "Group B": {
-        1: [("ZLY", "BCH"), ("PRE-MED", "FISHERIES")],
-        2: [("ZLY", "PRE-MED"), ("BCH", "FISHERIES")],
-        3: [("ZLY", "FISHERIES"), ("BCH", "PRE-MED")],
+        1: [("ZLY", "BCH"), ("PRE-MED", "FSH")],
+        2: [("ZLY", "PRE-MED"), ("BCH", "FSH")],
+        3: [("ZLY", "FSH"), ("BCH", "PRE-MED")],
     },
 }
 

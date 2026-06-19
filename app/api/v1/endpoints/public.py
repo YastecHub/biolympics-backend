@@ -37,6 +37,7 @@ from app.services.repo import (
     sport_by_slug,
 )
 from app.services.serializers import fixture_to_out
+from app.services.medal_table import DEFAULT_MEDAL_POINTS, MedalTally, compute_medal_table
 
 router = APIRouter()
 
@@ -278,21 +279,39 @@ async def medal_table(db: DbDep) -> list[MedalRowOut]:
             .order_by(DepartmentPoints.position.asc())
         )
     ).all()
+    recomputed = {
+        row.department_id: row
+        for row in compute_medal_table(
+            [
+                MedalTally(
+                    department_id=dp.department_id,
+                    gold=dp.gold,
+                    silver=dp.silver,
+                    bronze=dp.bronze,
+                    participation_points=dp.participation_points,
+                    bonus_points=dp.bonus_points,
+                    penalties=dp.penalties,
+                )
+                for dp, _dept in rows
+            ],
+            DEFAULT_MEDAL_POINTS,
+        )
+    }
     return [
         MedalRowOut(
             department_id=dp.department_id,
             department_abbr=dept.abbreviation,
             department_name=dept.name,
-            position=dp.position,
+            position=recomputed[dp.department_id].position,
             gold=dp.gold,
             silver=dp.silver,
             bronze=dp.bronze,
             participation_points=dp.participation_points,
             bonus_points=dp.bonus_points,
             penalties=dp.penalties,
-            total_points=dp.total_points,
+            total_points=recomputed[dp.department_id].total_points,
         )
-        for dp, dept in rows
+        for dp, dept in sorted(rows, key=lambda item: recomputed[item[0].department_id].position)
     ]
 
 

@@ -5,6 +5,8 @@ from __future__ import annotations
 import uuid
 from dataclasses import dataclass, field
 
+DEFAULT_MEDAL_POINTS = {"gold": 5, "silver": 2, "bronze": 1}
+
 
 @dataclass
 class MedalTally:
@@ -39,9 +41,9 @@ def compute_medal_table(
     The formula (points per medal) is editable per tournament. Ranking falls back
     to gold→silver→bronze count, then department_id, for full determinism.
     """
-    formula = formula or {"gold": 5, "silver": 3, "bronze": 1}
+    formula = formula or DEFAULT_MEDAL_POINTS
     g = float(formula.get("gold", 5))
-    s = float(formula.get("silver", 3))
+    s = float(formula.get("silver", 2))
     b = float(formula.get("bronze", 1))
 
     rows: list[MedalTableRow] = []

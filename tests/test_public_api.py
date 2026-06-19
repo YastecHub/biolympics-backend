@@ -68,6 +68,6 @@ async def test_ludo_medals_seeded(client, seeded):
     assert podium["PRE-MED"]["gold"] == 1
     assert podium["PRE-MED"]["total_points"] == 5
     assert podium["CBG"]["silver"] == 1
-    assert podium["CBG"]["total_points"] == 3
+    assert podium["CBG"]["total_points"] == 2
     assert podium["BCH"]["bronze"] == 1
     assert podium["BCH"]["total_points"] == 1

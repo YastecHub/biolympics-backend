@@ -64,10 +64,10 @@ def test_deterministic_and_idempotent():
 def test_medal_table_formula_and_ranking():
     tallies = [
         MedalTally(A, gold=1, silver=0, bronze=1),  # 5 + 1 = 6
-        MedalTally(B, gold=0, silver=2, bronze=0),  # 6
+        MedalTally(B, gold=0, silver=3, bronze=0),  # 6
         MedalTally(C, gold=2, silver=0, bronze=0),  # 10
     ]
-    rows = compute_medal_table(tallies, {"gold": 5, "silver": 3, "bronze": 1})
+    rows = compute_medal_table(tallies, {"gold": 5, "silver": 2, "bronze": 1})
     assert rows[0].department_id == C
     assert rows[0].position == 1
     assert rows[0].total_points == 10
