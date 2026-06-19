@@ -291,6 +291,7 @@ SPORTS = [
 VENUES = [
     ("Sports Centre", "Faculty of Life Sciences Sports Centre"),
     ("Main Field", "University Main Football Field"),
+    ("ISL Football Pitch", "ISL Football Pitch"),
     ("Indoor Hall", "Life Sciences Indoor Games Hall"),
     ("Swimming Pool", "University Aquatic Centre"),
     ("Athletics Track", "University Athletics Track"),
@@ -323,12 +324,12 @@ DRAWS = {
 # Male football round-robin pairings by match day (per the official draw).
 MALE_FOOTBALL_FIXTURES = {
     "Group A": {
-        1: [("BTN", "CBG"), ("MSM", "MIC")],
+        1: [("MIC", "MSM"), ("BTN", "CBG")],
         2: [("BTN", "MSM"), ("CBG", "MIC")],
         3: [("BTN", "MIC"), ("CBG", "MSM")],
     },
     "Group B": {
-        1: [("ZLY", "BCH"), ("PRE-MED", "FSH")],
+        1: [("PRE-MED", "FSH"), ("ZLY", "BCH")],
         2: [("ZLY", "PRE-MED"), ("BCH", "FSH")],
         3: [("ZLY", "FSH"), ("BCH", "PRE-MED")],
     },
@@ -336,9 +337,16 @@ MALE_FOOTBALL_FIXTURES = {
 
 # Match-day start times in Africa/Lagos local time (date, hour, minute, venue).
 MALE_FOOTBALL_SCHEDULE = {
-    1: ("2026-06-20", 11, 0, "Main Field"),
-    2: ("2026-06-22", 14, 0, "Main Field"),
-    3: ("2026-06-23", 12, 0, "Main Field"),
+    1: ("2026-06-20", 12, 45, "ISL Football Pitch"),
+    2: ("2026-06-22", 14, 0, "ISL Football Pitch"),
+    3: ("2026-06-23", 12, 0, "ISL Football Pitch"),
+}
+
+MALE_FOOTBALL_MATCH_TIMES = {
+    ("PRE-MED", "FSH"): ("2026-06-20", 12, 45),
+    ("MIC", "MSM"): ("2026-06-20", 13, 45),
+    ("BTN", "CBG"): ("2026-06-20", 14, 45),
+    ("ZLY", "BCH"): ("2026-06-20", 15, 45),
 }
 
 # Standalone scheduled events as fixtures (often with TBD teams/times).
@@ -347,7 +355,7 @@ MALE_FOOTBALL_SCHEDULE = {
 SCHEDULE_EVENTS = [
     ("indoor-games", "Group Play", "2026-06-19", 16, 0, 19, 0, "Indoor Hall"),
     ("marathon", "Marathon (M & F)", "2026-06-20", 6, 30, 10, 0, None),
-    ("female-football", "Knockout", "2026-06-20", 8, 0, 10, 0, None),
+    ("female-football", "Knockout", "2026-06-20", 11, 0, 13, 0, "ISL Football Pitch"),
     ("volleyball", "Knockout", "2026-06-22", 12, 0, 14, 0, None),
     ("basketball", "Knockout", "2026-06-22", 12, 0, 14, 0, "Sports Centre"),
     ("female-football", "Semi-Finals", "2026-06-23", 12, 0, 14, 0, None),

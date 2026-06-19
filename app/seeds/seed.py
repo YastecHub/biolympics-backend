@@ -220,6 +220,8 @@ async def seed(db: AsyncSession, with_demo: bool = True) -> dict:
             day, hour, minute, venue_name = data.MALE_FOOTBALL_SCHEDULE[match_day]
             start = _lagos_to_utc(day, hour, minute)
             for idx, (home_abbr, away_abbr) in enumerate(pairings):
+                match_time = data.MALE_FOOTBALL_MATCH_TIMES.get((home_abbr, away_abbr))
+                match_start = _lagos_to_utc(*match_time) if match_time else start + timedelta(hours=idx * 2)
                 fx = Fixture(
                     tournament_id=t.id,
                     sport_id=mf.id,
@@ -227,8 +229,8 @@ async def seed(db: AsyncSession, with_demo: bool = True) -> dict:
                     home_team_id=teams[("male-football", home_abbr)].id,
                     away_team_id=teams[("male-football", away_abbr)].id,
                     venue_id=venues[venue_name].id if venue_name else None,
-                    scheduled_start=start + timedelta(hours=idx * 2),
-                    scheduled_end=start + timedelta(hours=idx * 2 + 2),
+                    scheduled_start=match_start,
+                    scheduled_end=match_start + timedelta(hours=1),
                     match_day=match_day,
                     round_name=f"{group_name} — MD{match_day}",
                     status=FixtureStatus.SCHEDULED,
