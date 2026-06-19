@@ -14,6 +14,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 _BACKEND_DIR = Path(__file__).resolve().parents[2]
 _ENV_FILE = _BACKEND_DIR / ".env"
 
+KNOWN_FRONTEND_ORIGINS = {
+    "https://biolympics-live.vercel.app",
+    "https://usf26.pxxl.run",
+}
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -73,7 +78,11 @@ class Settings(BaseSettings):
 
     @property
     def cors_origin_list(self) -> list[str]:
-        return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+        origins = [o.strip().rstrip("/") for o in self.cors_origins.split(",") if o.strip()]
+        if self.app_url:
+            origins.append(self.app_url.strip().rstrip("/"))
+        origins.extend(KNOWN_FRONTEND_ORIGINS)
+        return list(dict.fromkeys(origins))
 
     @property
     def trusted_host_list(self) -> list[str]:
