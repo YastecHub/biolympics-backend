@@ -207,8 +207,8 @@ SPORTS = [
         11,
     ),
     (
-        "FIFA / E-Football",
-        "efootball",
+        "PES Console",
+        "pes-console",
         "gamepad",
         GenderCategory.OPEN,
         CompetitionFormat.KNOCKOUT,
