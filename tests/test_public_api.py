@@ -59,3 +59,15 @@ async def test_tbd_flags(client, seeded):
 async def test_announcements_include_urgent(client, seeded):
     anns = (await client.get("/api/v1/announcements")).json()
     assert any(a["is_urgent"] for a in anns)
+
+
+async def test_ludo_medals_seeded(client, seeded):
+    medals = (await client.get("/api/v1/medal-table")).json()
+    podium = {row["department_abbr"]: row for row in medals}
+
+    assert podium["PRE-MED"]["gold"] == 1
+    assert podium["PRE-MED"]["total_points"] == 5
+    assert podium["CBG"]["silver"] == 1
+    assert podium["CBG"]["total_points"] == 3
+    assert podium["BCH"]["bronze"] == 1
+    assert podium["BCH"]["total_points"] == 1

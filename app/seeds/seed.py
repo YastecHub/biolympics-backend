@@ -27,9 +27,11 @@ from app.models.core import (
     Tournament,
     Venue,
 )
-from app.models.enums import AnnouncementType, FixtureStatus, RoleName
+from app.models.enums import AnnouncementType, FixtureStatus, MedalKind, RoleName
 from app.models.fixtures import Fixture, LiveMatchState
+from app.models.standings import DepartmentPoints, Medal
 from app.seeds import data
+from app.services.medal_table import MedalTally, compute_medal_table
 from app.services.recompute import recompute_group_standings
 
 log = structlog.get_logger("seed")
@@ -287,6 +289,57 @@ async def seed(db: AsyncSession, with_demo: bool = True) -> dict:
 
     # Build the (empty until played) group tables.
     await recompute_group_standings(db, mf.id)
+
+    # Official Ludo podium. This is real tournament progress, so keep it in
+    # both live and demo seeds while football demo scores remain demo-only.
+    ludo = sports["ludo"]
+    medal_kinds = {
+        "GOLD": MedalKind.GOLD,
+        "SILVER": MedalKind.SILVER,
+        "BRONZE": MedalKind.BRONZE,
+    }
+    ludo_counts = {abbr: {"gold": 0, "silver": 0, "bronze": 0} for abbr in depts}
+    for abbr, kind in data.LUDO_MEDALS:
+        ludo_counts[abbr][kind.lower()] += 1
+        db.add(
+            Medal(
+                tournament_id=t.id,
+                department_id=depts[abbr].id,
+                sport_id=ludo.id,
+                kind=medal_kinds[kind],
+                label="Ludo",
+            )
+        )
+
+    medal_rows = compute_medal_table(
+        [
+            MedalTally(
+                department_id=dept.id,
+                gold=ludo_counts[abbr]["gold"],
+                silver=ludo_counts[abbr]["silver"],
+                bronze=ludo_counts[abbr]["bronze"],
+            )
+            for abbr, dept in depts.items()
+            if sum(ludo_counts[abbr].values()) > 0
+        ],
+        t.medal_points,
+    )
+    for row in medal_rows:
+        db.add(
+            DepartmentPoints(
+                tournament_id=t.id,
+                department_id=row.department_id,
+                gold=row.gold,
+                silver=row.silver,
+                bronze=row.bronze,
+                participation_points=row.participation_points,
+                bonus_points=row.bonus_points,
+                penalties=row.penalties,
+                total_points=row.total_points,
+                position=row.position,
+                breakdown=row.breakdown,
+            )
+        )
 
     # Announcements + sponsors are sample content — demo only. A real tournament
     # adds these through the admin UI.

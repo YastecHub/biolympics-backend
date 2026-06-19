@@ -389,3 +389,15 @@ SPONSORS = [
     {"name": "Faculty of Life Sciences", "tier": "Headline", "display_order": 1},
     {"name": "Students' Union", "tier": "Supporting", "display_order": 2},
 ]
+
+# Official completed Ludo podium.
+# Result flow:
+# QF: BCH 2-0 BTN, PRE-MED 2-0 MIC, CBG 2-1 ZLY, MSM 0-2 FISHERIES
+# SF: PRE-MED 2-1 BCH, FISHERIES 0-2 CBG
+# 3rd: FISHERIES 0-2 BCH
+# Final: CBG 1-2 PRE-MED
+LUDO_MEDALS = [
+    ("PRE-MED", "GOLD"),
+    ("CBG", "SILVER"),
+    ("BCH", "BRONZE"),
+]
