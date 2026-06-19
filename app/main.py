@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 from sqlalchemy import text
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.trustedhost import TrustedHostMiddleware
@@ -43,6 +43,9 @@ app = FastAPI(
     title="BIOLYMPICS LIVE API",
     version="0.1.0",
     description="Live-score platform for the Life Sciences Dean's Games 2026.",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
     lifespan=lifespan,
     openapi_tags=[
         {"name": "public", "description": "Read-only public endpoints"},
@@ -66,6 +69,28 @@ if settings.trusted_host_list:
     )
 
 app.include_router(api_router, prefix="/api/v1")
+
+
+@app.get("/", include_in_schema=False)
+async def api_root() -> dict:
+    return {
+        "name": settings.app_name,
+        "status": "ok",
+        "docs": "/docs",
+        "redoc": "/redoc",
+        "openapi": "/openapi.json",
+        "api": "/api/v1",
+    }
+
+
+@app.get("/api/v1/docs", include_in_schema=False)
+async def api_v1_docs_redirect() -> RedirectResponse:
+    return RedirectResponse(url="/docs")
+
+
+@app.get("/api/docs", include_in_schema=False)
+async def api_docs_redirect() -> RedirectResponse:
+    return RedirectResponse(url="/docs")
 
 
 # --------------------------------------------------------------------------- #

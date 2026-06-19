@@ -5,7 +5,7 @@ from __future__ import annotations
 import itertools
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import select
 
 from app.api.deps import CurrentUser, DbDep, require_roles
@@ -72,6 +72,43 @@ def _req_id(request: Request) -> str | None:
 # --------------------------------------------------------------------------- #
 # Fixture management (tournament admins)
 # --------------------------------------------------------------------------- #
+@router.get(
+    "/fixtures",
+    response_model=list[FixtureOut],
+    dependencies=[Depends(require_roles(*SCORERS))],
+)
+async def list_admin_fixtures(
+    db: DbDep,
+    user: CurrentUser,
+    sport: str | None = Query(default=None),
+    status_filter: FixtureStatus | None = Query(default=None, alias="status"),
+    include_drafts: bool = Query(default=True),
+) -> list[FixtureOut]:
+    """Admin fixture list, including drafts/unpublished rows for admins.
+
+    Score officials only see fixtures explicitly assigned to them.
+    """
+    stmt = select(Fixture).order_by(
+        Fixture.scheduled_start.asc().nullslast(),
+        Fixture.created_at.asc(),
+    )
+    if status_filter is not None:
+        stmt = stmt.where(Fixture.status == status_filter)
+    if not include_drafts:
+        stmt = stmt.where(Fixture.published.is_(True))
+    if sport:
+        sport_row = (
+            await db.execute(select(Sport).where(Sport.slug == sport))
+        ).scalar_one_or_none()
+        if sport_row is None:
+            return []
+        stmt = stmt.where(Fixture.sport_id == sport_row.id)
+    if not (set(user.role_names) & set(ADMINS)):
+        stmt = stmt.where(Fixture.score_official_id == user.id)
+    fixtures = (await db.execute(stmt)).scalars().all()
+    return [fixture_to_out(f) for f in fixtures]
+
+
 @router.post(
     "/fixtures",
     response_model=FixtureOut,
@@ -135,6 +172,10 @@ async def update_fixture(
     changes = payload.model_dump(exclude_unset=True)
     for key, value in changes.items():
         setattr(fx, key, value)
+    if changes.get("published") is True and fx.status == FixtureStatus.DRAFT:
+        fx.status = FixtureStatus.SCHEDULED
+    if changes.get("published") is False and fx.status == FixtureStatus.SCHEDULED:
+        fx.status = FixtureStatus.DRAFT
     await record_audit(
         db,
         action="fixture.updated",
@@ -690,6 +731,27 @@ async def reschedule_fixture(
 # --------------------------------------------------------------------------- #
 # Announcements (content managers + admins)
 # --------------------------------------------------------------------------- #
+@router.get(
+    "/announcements",
+    response_model=list[AnnouncementOut],
+    dependencies=[Depends(require_roles(*CONTENT))],
+)
+async def list_admin_announcements(db: DbDep) -> list[AnnouncementOut]:
+    rows = (
+        (
+            await db.execute(
+                select(Announcement).order_by(
+                    Announcement.published_at.desc().nullslast(),
+                    Announcement.created_at.desc(),
+                )
+            )
+        )
+        .scalars()
+        .all()
+    )
+    return [AnnouncementOut.model_validate(a) for a in rows]
+
+
 @router.post(
     "/announcements",
     response_model=AnnouncementOut,
