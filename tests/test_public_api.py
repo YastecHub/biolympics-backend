@@ -61,7 +61,7 @@ async def test_announcements_include_urgent(client, seeded):
     assert any(a["is_urgent"] for a in anns)
 
 
-async def test_ludo_medals_seeded(client, seeded):
+async def test_completed_medals_seeded(client, seeded):
     medals = (await client.get("/api/v1/medal-table")).json()
     podium = {row["department_abbr"]: row for row in medals}
 
@@ -70,4 +70,11 @@ async def test_ludo_medals_seeded(client, seeded):
     assert podium["CBG"]["silver"] == 1
     assert podium["CBG"]["total_points"] == 2
     assert podium["BCH"]["bronze"] == 1
-    assert podium["BCH"]["total_points"] == 1
+    assert podium["BCH"]["gold"] == 1
+    assert podium["BCH"]["total_points"] == 6
+    assert podium["BTN"]["gold"] == 1
+    assert podium["BTN"]["bronze"] == 1
+    assert podium["BTN"]["total_points"] == 6
+    assert podium["MIC"]["silver"] == 1
+    assert podium["FSH"]["silver"] == 1
+    assert podium["MSM"]["bronze"] == 1
