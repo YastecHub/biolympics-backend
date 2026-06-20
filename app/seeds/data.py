@@ -409,3 +409,13 @@ LUDO_MEDALS = [
     ("CBG", "SILVER"),
     ("BCH", "BRONZE"),
 ]
+
+# Official completed marathon podiums.
+MARATHON_MEDALS = [
+    ("BCH", "GOLD", "Marathon Female"),
+    ("MIC", "SILVER", "Marathon Female"),
+    ("BTN", "BRONZE", "Marathon Female"),
+    ("BTN", "GOLD", "Marathon Male"),
+    ("FSH", "SILVER", "Marathon Male"),
+    ("MSM", "BRONZE", "Marathon Male"),
+]

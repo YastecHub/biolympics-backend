@@ -292,24 +292,34 @@ async def seed(db: AsyncSession, with_demo: bool = True) -> dict:
     # Build the (empty until played) group tables.
     await recompute_group_standings(db, mf.id)
 
-    # Official Ludo podium. This is real tournament progress, so keep it in
+    # Official podiums. These are real tournament progress, so keep them in
     # both live and demo seeds while football demo scores remain demo-only.
-    ludo = sports["ludo"]
     medal_kinds = {
         "GOLD": MedalKind.GOLD,
         "SILVER": MedalKind.SILVER,
         "BRONZE": MedalKind.BRONZE,
     }
-    ludo_counts = {abbr: {"gold": 0, "silver": 0, "bronze": 0} for abbr in depts}
+    medal_counts = {abbr: {"gold": 0, "silver": 0, "bronze": 0} for abbr in depts}
     for abbr, kind in data.LUDO_MEDALS:
-        ludo_counts[abbr][kind.lower()] += 1
+        medal_counts[abbr][kind.lower()] += 1
         db.add(
             Medal(
                 tournament_id=t.id,
                 department_id=depts[abbr].id,
-                sport_id=ludo.id,
+                sport_id=sports["ludo"].id,
                 kind=medal_kinds[kind],
                 label="Ludo",
+            )
+        )
+    for abbr, kind, label in data.MARATHON_MEDALS:
+        medal_counts[abbr][kind.lower()] += 1
+        db.add(
+            Medal(
+                tournament_id=t.id,
+                department_id=depts[abbr].id,
+                sport_id=sports["marathon"].id,
+                kind=medal_kinds[kind],
+                label=label,
             )
         )
 
@@ -317,12 +327,12 @@ async def seed(db: AsyncSession, with_demo: bool = True) -> dict:
         [
             MedalTally(
                 department_id=dept.id,
-                gold=ludo_counts[abbr]["gold"],
-                silver=ludo_counts[abbr]["silver"],
-                bronze=ludo_counts[abbr]["bronze"],
+                gold=medal_counts[abbr]["gold"],
+                silver=medal_counts[abbr]["silver"],
+                bronze=medal_counts[abbr]["bronze"],
             )
             for abbr, dept in depts.items()
-            if sum(ludo_counts[abbr].values()) > 0
+            if sum(medal_counts[abbr].values()) > 0
         ],
         t.medal_points,
     )
