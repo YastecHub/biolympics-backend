@@ -326,12 +326,12 @@ MALE_FOOTBALL_FIXTURES = {
     "Group A": {
         1: [("MIC", "MSM"), ("BTN", "CBG")],
         2: [("MIC", "CBG"), ("BTN", "MSM")],
-        3: [("BTN", "MIC"), ("CBG", "MSM")],
+        3: [("MIC", "BTN"), ("CBG", "MSM")],
     },
     "Group B": {
         1: [("PRE-MED", "FSH"), ("ZLY", "BCH")],
         2: [("BCH", "FSH"), ("ZLY", "PRE-MED")],
-        3: [("ZLY", "FSH"), ("BCH", "PRE-MED")],
+        3: [("ZLY", "PRE-MED")],
     },
 }
 
@@ -339,7 +339,7 @@ MALE_FOOTBALL_FIXTURES = {
 MALE_FOOTBALL_SCHEDULE = {
     1: ("2026-06-20", 12, 45, "ISL Football Pitch"),
     2: ("2026-06-21", 12, 45, "Sports Centre"),
-    3: ("2026-06-23", 12, 0, "ISL Football Pitch"),
+    3: ("2026-06-23", 12, 45, "Sports Centre"),
 }
 
 MALE_FOOTBALL_MATCH_TIMES = {
@@ -350,19 +350,22 @@ MALE_FOOTBALL_MATCH_TIMES = {
     ("MIC", "CBG"): ("2026-06-21", 12, 45),
     ("BCH", "FSH"): ("2026-06-21", 13, 45),
     ("BTN", "MSM"): ("2026-06-21", 14, 45),
-    ("ZLY", "PRE-MED"): ("2026-06-21", 15, 45),
+    (2, "ZLY", "PRE-MED"): ("2026-06-21", 15, 45),
+    ("MIC", "BTN"): ("2026-06-23", 12, 45),
+    ("CBG", "MSM"): ("2026-06-23", 13, 45),
+    (3, "ZLY", "PRE-MED"): ("2026-06-23", 15, 45),
 }
 
 # Standalone scheduled events as fixtures (often with TBD teams/times).
 # (sport_slug, label/round_name, date or None, start hour, start min, end hour,
 #  end min, venue or None)
 SCHEDULE_EVENTS = [
-    ("indoor-games", "Group Play", "2026-06-19", 16, 0, 19, 0, "Indoor Hall"),
+    ("indoor-games", "Group Play", "2026-06-23", 14, 0, 16, 0, "Indoor Hall"),
     ("marathon", "Marathon (M & F)", "2026-06-20", 6, 30, 10, 0, None),
     ("female-football", "Knockout", "2026-06-20", 11, 0, 13, 0, "ISL Football Pitch"),
     ("volleyball", "Knockout", "2026-06-21", 12, 0, 13, 20, "Sports Centre"),
     ("basketball", "Knockout", "2026-06-21", 12, 0, 13, 20, "Sports Centre"),
-    ("female-football", "Semi-Finals", "2026-06-23", 12, 0, 14, 0, None),
+    ("female-football", "Semi-Finals", "2026-06-23", 13, 30, 15, 15, "ISL Football Pitch"),
     ("table-tennis", "Round 1", None, None, None, None, None, None),
     ("volleyball", "Semi-Finals", "2026-06-24", 14, 0, 16, 0, None),
     ("swimming", "Heats & Finals", "2026-06-24", 14, 0, 16, 0, "Swimming Pool"),
